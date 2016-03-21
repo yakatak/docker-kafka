@@ -6,7 +6,7 @@ ENV KAFKA_RELEASE ${SCALA_VERSION}-${KAFKA_VERSION}
 
 RUN apk --update add ca-certificates curl jq gnupg tar bash && \
     eval $(gpg-agent --daemon) && \
-    mkdir -p /kafka/config /kafka/data /kafka/logs /kafka/templates && \
+    mkdir -p /kafka/persistent /kafka/templates && \
     cd /tmp && \
     MIRROR=`curl -sSL https://www.apache.org/dyn/closer.cgi\?as_json\=1 | jq -r '.preferred'` && \
     curl -sSLO "${MIRROR}/kafka/${KAFKA_VERSION}/kafka_${KAFKA_RELEASE}.tgz" && \

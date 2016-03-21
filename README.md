@@ -12,8 +12,10 @@ spec:
   ports:
     - name: kafka
       port: 9092
+      protocol: TCP
     - name: jmx
       port: 7203
+      protocol: TCP
   selector:
     app: kafka
 ---
@@ -29,31 +31,30 @@ spec:
         app: kafka
     spec:
       volumes:
-        - name: config
-          emptyDir: {}
-        - name: data
-          emptyDir: {}
-        - name: log
+        - name: kafka
           emptyDir: {}
       containers:
         - name: server
-          image: elevy/kafka:latest
+          image: quay.io/xeizmendi/docker-kafka:latest
           env:
             - name: ZOOKEEPER_SERVERS
               value: zookeeper:2181
             - name: ZOOKEEPER_ROOT
               value: /kafka
             #- name: KAFKA_HEAP_OPTS
-            #  value: "-Xms4g -Xmx4g"
+            #  value: "-Xms1g -Xmx1g"
+            #- name: KAFKA_OFFSET_REPLICATION_FACTOR
+            #  value: 3
+            #- name: KAFKA_AUTO_CREATE_TOPICS
+            #  value: false
           ports:
             - containerPort: 9092
+              name: broker
+              transport: TCP
             - containerPort: 7203
+              name: jmx
+              transport: TCP
           volumeMounts:
-            # Ensure persistence if the containers in the pod terminate.
-            - mountPath: /kafka/config
-              name: config
-            - mountPath: /kafka/data
-              name: data
-            - mountPath: /kafka/log
-              name: log
+            - mountPath: /kafka/persistent
+              name: kafka
 ```
