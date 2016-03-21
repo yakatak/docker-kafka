@@ -44,16 +44,16 @@ spec:
             #- name: KAFKA_HEAP_OPTS
             #  value: "-Xms1g -Xmx1g"
             #- name: KAFKA_OFFSET_REPLICATION_FACTOR
-            #  value: 3
+            #  value: "3"
             #- name: KAFKA_AUTO_CREATE_TOPICS
-            #  value: false
+            #  value: "false"
           ports:
             - containerPort: 9092
               name: broker
-              transport: TCP
+              protocol: TCP
             - containerPort: 7203
               name: jmx
-              transport: TCP
+              protocol: TCP
           volumeMounts:
             - mountPath: /kafka/persistent
               name: kafka
