@@ -1,7 +1,7 @@
 FROM develar/java
 
-ENV KAFKA_VERSION=0.9.0.0 \
-    SCALA_VERSION=2.10
+ENV KAFKA_VERSION=0.9.0.1 \
+    SCALA_VERSION=2.11
 ENV KAFKA_RELEASE ${SCALA_VERSION}-${KAFKA_VERSION}
 
 RUN apk --update add ca-certificates curl jq gnupg tar bash && \
