@@ -11,8 +11,13 @@ if [ ! -d /kafka/persistent/logs ]; then
   mkdir -p /kafka/persistent/logs
 fi
 
+if [ ! -d /kafka/persistent/data ]; then
+  mkdir -p /kafka/persistent/data
+fi
+
 ln -s /kafka/persistent/config /kafka/config
 ln -s /kafka/persistent/logs /kafka/logs
+ln -s /kafka/persistent/data /kafka/data
 
 if [ ! -f /kafka/config/server.properties ]; then
 	# Create a ZK connection string for the servers and the root.
@@ -27,10 +32,10 @@ if [ ! -f /kafka/config/server.properties ]; then
 
 	if [ -z $BROKER_ID ]; then
 		# Create node to use for id allocation.
-		echo create /kafka_id_alloc 0 | /kafka/bin/zookeeper-shell.sh $ZOOKEEPER_CONNECT &> /dev/null
+		echo create /allocate_kafka_id 0 | /kafka/bin/zookeeper-shell.sh $ZOOKEEPER_CONNECT &> /dev/null
 
 		# Allocate an id by writing to a node and retriving its version number.
-		BROKER_ID=`echo set /kafka_id_alloc 0 | /kafka/bin/zookeeper-shell.sh $ZOOKEEPER_CONNECT 2>&1 | grep dataVersion | cut -d' ' -f 3`
+		BROKER_ID=`echo set /allocate_kafka_id 0 | /kafka/bin/zookeeper-shell.sh $ZOOKEEPER_CONNECT 2>&1 | grep dataVersion | cut -d' ' -f 3`
 		echo "Allocated broker id ${BROKER_ID}."
 	else
 		echo "Using broker id ${BROKER_ID}."
