@@ -3,11 +3,18 @@
 # Only allocate a broker id and configure the system the first time this container starts.
 # A Kubernetes volume mount will preserve the config if the container dies and is restarted
 # in the same node.
-if [ ! -f /kafka/config/server.properties ]; then
+if [ ! -d /kafka/persistent/config ]; then
   mkdir -p /kafka/persistent/config
-  ln -s /kafka/persistent/config /kafka/config
+fi
+
+if [ ! -d /kafka/persistent/logs ]; then
   mkdir -p /kafka/persistent/logs
-  ln -s /kafka/persistent/logs /kafka/logs
+fi
+
+ln -s /kafka/persistent/config /kafka/config
+ln -s /kafka/persistent/logs /kafka/logs
+
+if [ ! -f /kafka/config/server.properties ]; then
 	# Create a ZK connection string for the servers and the root.
 	ZOOKEEPER_CONNECT=$ZOOKEEPER_SERVERS${ZOOKEEPER_ROOT:=/kafka}
 	KAFKA_OFFSET_REPLICATION_FACTOR=${KAFKA_OFFSET_REPLICATION_FACTOR:=3}
